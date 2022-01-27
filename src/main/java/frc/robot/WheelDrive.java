@@ -6,6 +6,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public final class WheelDrive {
     private WPI_TalonSRX angleMotor;
@@ -15,24 +16,22 @@ public final class WheelDrive {
     private boolean debug;
     private String name;
 
-    public WheelDrive(String name, int speedMotorID, int angleMotorID, double kP, double kI, double kD, int encoderTicks, boolean forward, boolean debug) {
+    public WheelDrive(String name, int speedMotorID, int angleMotorID, double kP, double kI, double kD, int encoderTicks, boolean forward) {
         this.name = name;
         this.encoderTicks = encoderTicks;
         this.forward = forward;
-        this.debug = debug;
+        this.debug = false;
 
         angleMotor = new WPI_TalonSRX(angleMotorID);
         speedMotor = new WPI_TalonSRX(speedMotorID);
 
-        //angleMotor.configFactoryDefault();
+        speedMotor.setNeutralMode(NeutralMode.Brake);
+
         angleMotor.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 0);
-        angleMotor.setSelectedSensorPosition(0);
-        angleMotor.config_kP(0, kP, 0);
+        angleMotor.config_kP(0, kP);
         angleMotor.config_kI(0, kI);
         angleMotor.config_kD(0, kD);
-        angleMotor.selectProfileSlot(0, 0);     
-        angleMotor.set(ControlMode.Position, 0);   
-
+        angleMotor.selectProfileSlot(0, 0);   
     }
 
     public void drive(double speed, double angleRange) {
@@ -45,6 +44,7 @@ public final class WheelDrive {
         //    desirePos = (desirePos + (encoderTicks / 2)) % encoderTicks;
         //    speed = -speed;
        // }
+
         if (!forward) {
             speed *= -1;
         }
@@ -60,12 +60,16 @@ public final class WheelDrive {
 
     public void stop(){
         speedMotor.set(ControlMode.PercentOutput, 0);
-        //angleMotor.set(ControlMode.PercentOutput, 0);
+        angleMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void setPID(double kP, double kI, double kD){
         angleMotor.config_kP(0, kP, 0);
         angleMotor.config_kI(0, kI);
         angleMotor.config_kD(0, kD);
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }

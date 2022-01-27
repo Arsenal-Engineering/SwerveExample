@@ -48,18 +48,36 @@ public final class SwerveDrive {
     public void setPID(String wheel, double kP, double kI, double kD){
         if (wheel.equals("BR")) {
             bR.setPID(kP, kI, kD);
+            bR.setDebug(true);
+            bL.setDebug(false);
+            fL.setDebug(false);
+            fR.setDebug(false);
         }
         else if (wheel.equals("BL")) {
             bL.setPID(kP, kI, kD);
+            bR.setDebug(false);
+            bL.setDebug(true);
+            fL.setDebug(false);
+            fR.setDebug(false);
         }
         else if (wheel.equals("FR")) {
             fR.setPID(kP, kI, kD);
+            bR.setDebug(false);
+            bL.setDebug(false);
+            fL.setDebug(false);
+            fR.setDebug(true);
         }
         else if (wheel.equals("FL")) {
             fL.setPID(kP, kI, kD);
-        }
-        else {
-            System.out.println("Unrecognized wheel: " + wheel);
+            bR.setDebug(false);
+            bL.setDebug(false);
+            fL.setDebug(true);
+            fR.setDebug(false);
+        } else {
+            bR.setDebug(false);
+            bL.setDebug(false);
+            fL.setDebug(false);
+            fR.setDebug(false);
         }
     }
 }
